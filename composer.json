@@ -1,0 +1,16 @@
+{
+    "autoload": {
+        "psr-4": {
+            "HolidaysJP\\": "app/"
+        }
+    },
+    "require": {
+        "cakephp/chronos": "^2.2",
+        "illuminate/support": "^8.58",
+        "phpunit/phpunit": "^9.5"
+    },
+    "scripts": {
+        "build": "php main.php",
+        "test": "phpunit"
+    }
+}

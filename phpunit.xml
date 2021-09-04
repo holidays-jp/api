@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit colors="true" bootstrap="tests/bootstrap.php">
+    <testsuite name="holidaysJP">
+        <directory>tests/</directory>
+    </testsuite>
+</phpunit>
