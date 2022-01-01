@@ -1,4 +1,4 @@
-# 日本の祝日API / Holidays JP API
+# 🎌 日本の祝日API / Holidays JP API
 
 Japanese Holidays API
 
