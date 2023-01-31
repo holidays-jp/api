@@ -6,4 +6,4 @@ https://holidays-jp.github.io/
 
 ## Licence
 
-[MIT](https://github.com/holidays-jp/holidays-jp.github.io/blob/master/LICENSE)
+[MIT](https://github.com/holidays-jp/api/blob/master/LICENCE)
