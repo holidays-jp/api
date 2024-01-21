@@ -48,6 +48,8 @@ class holidaysJP
         foreach ($yearly as $year => $ary) {
             $this->generate_api_file($ary, $year);
         }
+
+        $this->updateCheckedFile();
     }
 
     /**
@@ -164,5 +166,11 @@ class holidaysJP
             fputcsv($fp, $record);
         }
         fclose($fp);
+    }
+
+    protected function updateCheckedFile()
+    {
+        $checkedFile = self::DIST . '/checked_at.txt';
+        file_put_contents($checkedFile, date('Y-m-d H:i:s'));
     }
 }

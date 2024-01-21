@@ -4,7 +4,7 @@ on:
   push:
     branches: [ master, v1.1, build-test ]
   schedule:
-    - cron:  '19 19 */3 * *'
+    - cron:  '5 15 1,15,31 * *'
 
 jobs:
   build:
@@ -30,6 +30,8 @@ jobs:
         run: composer build
 
       - name: commit and push
+        env:
+          TZ: 'Asia/Tokyo'
         run: |
           git add -N .
           if ! git diff --exit-code --quiet
@@ -37,6 +39,6 @@ jobs:
             git config user.email "matsuoshi@gmail.com"
             git config user.name "from GitHub Actions"
             git add --all
-            git commit -m "update holidays"
+            git commit -m "$(date +'%Y-%m-%d %H:%M:%S')"
             git push
           fi
