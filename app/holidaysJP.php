@@ -105,6 +105,9 @@ class holidaysJP
         if ($name == '体育の日' && $date->year >= 2020) {
             return 'スポーツの日';
         }
+        if ($name == 'スポーツの日' && $date->year <= 2019) {
+            return '体育の日';
+        }
 
         return $name;
     }
