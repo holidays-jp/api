@@ -118,8 +118,14 @@ class holidaysJP
      */
     public function filter_for_3years(Collection $holidays): Collection
     {
-        // todo
-        return $holidays;
+        $range = [
+            'start' => Chronos::now()->subYears(1)->startOfYear()->timestamp,
+            'end'   => Chronos::now()->addYears(1)->endOfYear()->timestamp
+        ];
+
+        return $holidays->filter(function($name, $timestamp) use ($range) {
+            return $timestamp >= $range['start'] && $timestamp <= $range['end'];
+        });
     }
 
     /**
