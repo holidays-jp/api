@@ -18,14 +18,14 @@ class holidaysJPTest extends TestCase
         // サンプル ical データの解析テスト
         $test_file = __DIR__ . '/testdata.ics';
         $holidays = new holidaysJP($test_file);
-        $data = $holidays->convert_ical_to_array($holidays->get_ical_data());
+        $data = $holidays->get_holidays($holidays->get_ical_data());
 
         $expected = [
             1420038000 => '元日',
             1458486000 => '春分の日 振替休日',
             1513954800 => '天皇誕生日',
         ];
-        $this->assertEquals($expected, $data);
+        $this->assertEquals($expected, $data->toArray());
     }
 
     /**

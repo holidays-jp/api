@@ -30,23 +30,20 @@ class holidaysJP
      */
     public function generate()
     {
-        // icalデータを取得して配列化
-        $data = $this->get_ical_data();
-        $holidays = $this->convert_ical_to_array($data);
+        // 祝日データを取得
+        $holidays = $this->get_holidays();
 
         // 一覧データを出力
-        $this->generate_api_file($holidays);
+        $this->generate_api_file($this->filter_for_3years($holidays));
 
         // データを年別に分解
-        $yearly = Collection::make($holidays)
-            ->groupBy(function ($item, $key) {
+        $yearly = $holidays->groupBy(function ($item, $key) {
                 return Chronos::createFromTimestamp($key)->year;
-            }, true)
-            ->toArray();
+            }, true);
 
         // 年別データを出力
-        foreach ($yearly as $year => $ary) {
-            $this->generate_api_file($ary, $year);
+        foreach ($yearly as $year => $a) {
+            $this->generate_api_file($a, $year);
         }
 
         $this->updateCheckedFile();
@@ -65,10 +62,12 @@ class holidaysJP
     /**
      * iCal形式のデータを配列に変換
      * @param $data
-     * @return array
+     * @return Collection
      */
-    function convert_ical_to_array($data): array
+    function get_holidays($data = null): Collection
     {
+        $data = $data ?? $this->get_ical_data();
+
         $results = [];
 
         // イベントごとに区切って配列化
@@ -91,7 +90,7 @@ class holidaysJP
 
         // 日付順にソートして返却
         ksort($results);
-        return $results;
+        return Collection::make($results);
     }
 
 
@@ -113,11 +112,22 @@ class holidaysJP
     }
 
     /**
+     * 去年・今年・来年のデータのみに絞る
+     * @param Collection $holidays
+     * @return Collection
+     */
+    public function filter_for_3years(Collection $holidays): Collection
+    {
+        // todo
+        return $holidays;
+    }
+
+    /**
      * APIデータをファイルに出力
-     * @param $data
+     * @param Collection $data
      * @param string $year
      */
-    function generate_api_file($data, string $year = '')
+    function generate_api_file(Collection $data, string $year = '')
     {
         // 出力先フォルダがなければ作成
         $dist_dir = (!empty($year)) ? self::DIST . '/' . $year : self::DIST;
@@ -130,11 +140,9 @@ class holidaysJP
         $this->output_csv_file($dist_dir . "/datetime.csv", $data);
 
         // キーをYMD形式に変換して出力
-        $date_data = Collection::make($data)
-            ->keyBy(function ($item, $key) {
-                return Chronos::createFromTimestamp($key)->toDateString();
-            })
-            ->toArray();
+        $date_data = $data->keyBy(function ($item, $key) {
+            return Chronos::createFromTimestamp($key)->toDateString();
+        });
 
         // ファイル出力 (date)
         $this->output_json_file($dist_dir . "/date.json", $date_data);
