@@ -10,6 +10,8 @@ use PHPUnit\Framework\TestCase;
  */
 class holidaysJPTest extends TestCase
 {
+    private $dist = __DIR__ . '/tmp';
+
     /**
      * ical解析関連のテスト
      */
@@ -35,7 +37,7 @@ class holidaysJPTest extends TestCase
     {
         // 実際のデータの生成
         $url = 'https://calendar.google.com/calendar/ical/japanese__ja@holiday.calendar.google.com/public/full.ics';
-        $holidays = new holidaysJP($url);
+        $holidays = new holidaysJP($url, $this->dist);
         $holidays->generate();
 
         // 一覧データのチェック
@@ -60,11 +62,11 @@ class holidaysJPTest extends TestCase
 
         // 2024/2025 ファイル一致チェック
         $file1 = file_get_contents(__DIR__ . '/data/2024.json');
-        $file2 = file_get_contents(dirname(__DIR__) . '/docs/v1/2024/date.json');
+        $file2 = file_get_contents("{$this->dist}/2024/date.json");
         $this->assertEquals($file1, $file2);
 
         $file1 = file_get_contents(__DIR__ . '/data/2025.json');
-        $file2 = file_get_contents(dirname(__DIR__) . '/docs/v1/2025/date.json');
+        $file2 = file_get_contents("{$this->dist}/2025/date.json");
         $this->assertEquals($file1, $file2);
     }
 
@@ -79,7 +81,7 @@ class holidaysJPTest extends TestCase
         $data = array();
 
         // ファイルの存在チェック
-        $filename = dirname(__DIR__) . "/docs/v1/{$filename}";
+        $filename = "{$this->dist}/{$filename}";
 
         $this->assertFileExists($filename);
 

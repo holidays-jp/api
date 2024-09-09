@@ -12,17 +12,18 @@ use Illuminate\Support\Collection;
 class holidaysJP
 {
     protected $ical_url;
-    const DIST = __DIR__ . '/../docs/v1';
+    protected $dist;
 
     /**
      * holidaysJP constructor.
      * @param $url
      */
-    public function __construct($url = null)
+    public function __construct($url = null, $dist = null)
     {
         date_default_timezone_set('Asia/Tokyo');
 
         $this->ical_url = $url ?: 'https://calendar.google.com/calendar/ical/ja.japanese%23holiday%40group.v.calendar.google.com/public/basic.ics';
+        $this->dist = $dist ?: dirname(__DIR__) . '/docs/v1';
     }
 
     /**
@@ -162,7 +163,7 @@ class holidaysJP
     function generate_api_file(Collection $data, string $year = '')
     {
         // 出力先フォルダがなければ作成
-        $dist_dir = (!empty($year)) ? self::DIST . '/' . $year : self::DIST;
+        $dist_dir = (!empty($year)) ? "{$this->dist}/{$year}" : $this->dist;
         if (!is_dir($dist_dir)) {
             mkdir($dist_dir);
         }

@@ -27,7 +27,7 @@ jobs:
       - name: touch
         env:
           TZ: 'Asia/Tokyo'
-        run: composer touch
+        run: composer test && composer touch
 
       - name: commit and push
         run: |
