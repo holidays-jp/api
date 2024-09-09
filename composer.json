@@ -10,7 +10,8 @@
         "phpunit/phpunit": "^9.5"
     },
     "scripts": {
-        "build": "php main.php",
+        "build": "php main.php && composer touch",
+        "touch": "date '+%F %T' > docs/v1/checked_at.txt",
         "test": "phpunit"
     }
 }

@@ -1,14 +1,12 @@
-name: Build
+name: touch
 
 on:
   schedule:
-    - cron:  '0 15 31 12 *'
+    - cron:  '0 3 1 * *'
   workflow_dispatch:
-  push:
-    branches: [ build-test ]
 
 jobs:
-  build:
+  touch:
     runs-on: ubuntu-latest
 
     steps:
@@ -26,10 +24,10 @@ jobs:
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress
 
-      - name: build api files
+      - name: touch
         env:
           TZ: 'Asia/Tokyo'
-        run: composer build
+        run: composer touch
 
       - name: commit and push
         run: |
@@ -39,6 +37,6 @@ jobs:
             git config user.email "matsuoshi@gmail.com"
             git config user.name "from GitHub Actions"
             git add --all
-            git commit -m "build"
+            git commit -m "touch"
             git push
           fi
