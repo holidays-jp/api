@@ -80,12 +80,13 @@ class holidaysJP
             }
             $date = Chronos::createFromTimestamp(strtotime($m[1]));
 
-            // サマリ(祝日名)を求める
-            if (preg_match('/SUMMARY:(.+?)\n/m', $event, $summary) != 1) {
+            // 祝日名を取得
+            $holiday_name = $this->get_holiday_name($event);
+            if (!$holiday_name) {
                 continue;
             }
 
-            $results[$date->timestamp] = $this->convert_holiday_name($date, $summary[1]);
+            $results[$date->timestamp] = $this->convert_holiday_name($date, $holiday_name);
         }
 
         // 日付順にソートして返却
@@ -93,6 +94,33 @@ class holidaysJP
         return Collection::make($results);
     }
 
+    public function get_holiday_name($event): ?string
+    {
+        if (preg_match('/SUMMARY:(.+?)\n/m', $event, $summary) != 1) {
+            return null;
+        };
+
+        return $this->filetr_holiday_name($summary[1]);
+    }
+
+    public function filetr_holiday_name($name): ?string
+    {
+        $holidays = [
+            '元日', '成人の日', '建国記念の日', '天皇誕生日',
+            '春分の日',	'昭和の日',	'憲法記念日', 'みどりの日',
+            'こどもの日', '海の日',	'山の日', '敬老の日',
+            '秋分の日',	'スポーツの日',	'文化の日',	'勤労感謝の日',
+            '国民の休日', '祝日',
+            // 過去の祝日
+            '体育の日', '天皇の即位の日', '即位礼正殿の儀の行われる日',
+        ];
+        foreach ($holidays as $holiday) {
+            if (strpos($name, $holiday) !== false) {
+                return $name;
+            }
+        }
+        return null;
+    }
 
     /**
      * @param Chronos $date
