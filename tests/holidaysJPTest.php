@@ -16,7 +16,7 @@ class holidaysJPTest extends TestCase
     public function testICALAnalyze()
     {
         // サンプル ical データの解析テスト
-        $test_file = __DIR__ . '/testdata.ics';
+        $test_file = __DIR__ . '/data/testdata.ics';
         $holidays = new holidaysJP($test_file);
         $data = $holidays->get_holidays($holidays->get_ical_data());
 
@@ -57,6 +57,15 @@ class holidaysJPTest extends TestCase
         $this->checkApiFile("{$nextyear}/datetime.json", $nextyear, true);
         $this->checkApiFile("{$nextyear}/date.csv", $nextyear);
         $this->checkApiFile("{$nextyear}/datetime.csv", $nextyear, true);
+
+        // 2024/2025 ファイル一致チェック
+        $file1 = file_get_contents(__DIR__ . '/data/2024.json');
+        $file2 = file_get_contents(dirname(__DIR__) . '/docs/v1/2024/date.json');
+        $this->assertEquals($file1, $file2);
+
+        $file1 = file_get_contents(__DIR__ . '/data/2025.json');
+        $file2 = file_get_contents(dirname(__DIR__) . '/docs/v1/2025/date.json');
+        $this->assertEquals($file1, $file2);
     }
 
     /**
