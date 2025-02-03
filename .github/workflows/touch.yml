@@ -11,32 +11,18 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-
-      - name: Cache Composer packages
-        id: composer-cache
-        uses: actions/cache@v4
         with:
-          path: vendor
-          key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-php-
-
-      - name: Install dependencies
-        run: composer install --prefer-dist --no-progress
+          ref: touch
 
       - name: touch
         env:
           TZ: 'Asia/Tokyo'
-        run: composer test && composer touch
+        run: date '+%F %T' > touch.txt
 
       - name: commit and push
         run: |
-          git add -N .
-          if ! git diff --exit-code --quiet
-          then
-            git config user.email "matsuoshi@gmail.com"
-            git config user.name "from GitHub Actions"
-            git add --all
-            git commit -m "touch"
-            git push
-          fi
+          git config user.email "matsuoshi@gmail.com"
+          git config user.name "from GitHub Actions"
+          git add --all
+          git commit -m "touch"
+          git push
